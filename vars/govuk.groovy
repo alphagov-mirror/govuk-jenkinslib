@@ -286,19 +286,21 @@ def dockerBuildTasks(options, jobName) {
  * @param repoName Name of the alphagov repository
  */
 def runBrakemanSecurityScanner(repoName) {
+  def installDir = "${JENKINS_HOME}/manually-installed-gems"
+
   // Install the brakeman gem and parse the output to retrieve the version we
   // just installed. We'll use that version to run the brakeman binary. We need
   // to do this because we can't just `gem install` the gem on Jenkins and want
   // to prevent having to add the gem to every Gemfile.
   def gemVersion = sh(
-    script: "gem install --no-document -q --install-dir ${JENKINS_HOME}/manually-installed-gems brakeman | grep 'Successfully installed brakeman'",
+    script: "gem install --no-document -q --install-dir ${installDir} brakeman | grep 'Successfully installed brakeman'",
     returnStdout: true
   ).replaceAll("Successfully installed ", "").trim()
 
   // Run brakeman's executable. If it finds security alerts it will return with
   // an exited code other than 0.
   def brakemanExitCode = sh(
-    script: "${JENKINS_HOME}/manually-installed-gems/gems/${gemVersion}/bin/brakeman . --except CheckRenderInline",
+    script: "${installDir}/gems/${gemVersion}/bin/brakeman . --except CheckRenderInline",
     returnStatus: true
   )
 
