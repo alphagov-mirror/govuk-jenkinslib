@@ -293,6 +293,11 @@ def runBrakemanSecurityScanner(repoName) {
   // gem on Jenkins and want to prevent having to add the gem to every Gemfile.
   sh(script: "gem install --no-document --install-dir ${installDir} brakeman")
 
+  // We're seeing a problem where sometimes Brakeman doesn't install properly
+  // and it's very difficult to debug. We're going to trial this to see if it
+  // has any sort of effect.
+  sleep(1)
+
   // Get the latest installed version of the Brakeman gem which we will use to
   // run the Brakeman binary.
   def gemVersion = sh(
