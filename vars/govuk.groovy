@@ -289,13 +289,16 @@ def runBrakemanSecurityScanner(repoName) {
   def installDir = "${JENKINS_HOME}/manually-installed-gems"
 
   // Install the brakeman gem and parse the output to retrieve the version we
-  // just installed. We'll use that version to run the brakeman binary. We need
-  // to do this because we can't just `gem install` the gem on Jenkins and want
-  // to prevent having to add the gem to every Gemfile.
+  // just installed. We need to do this because we can't just `gem install` the
+  // gem on Jenkins and want to prevent having to add the gem to every Gemfile.
+  sh(script: "gem install -q --no-document --install-dir ${installDir} brakeman")
+
+  // Get the latest installed version of the Brakeman gem which we will use to
+  // run the Brakeman binary.
   def gemVersion = sh(
-    script: "gem install --no-document -q --install-dir ${installDir} brakeman | grep 'Successfully installed brakeman'",
+    script: "gem list -q -l --versions --install-dir ${installDir} brakeman | grep -o '\\((.*)\\)\$' | tr -d '() ' | tr ',' \"\\n\" | sort | tail -n1",
     returnStdout: true
-  ).replaceAll("Successfully installed ", "").trim()
+  ).trim()
 
   // Run brakeman's executable. If it finds security alerts it will return with
   // an exited code other than 0.
