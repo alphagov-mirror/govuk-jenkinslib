@@ -35,18 +35,6 @@ For gems: if the version has changed, the latest version will be released to rub
 
 ## Exceptions
 
-If you use `govuk-lint` but aren't linting your SASS yet (you should), you can
-disable linting:
-
-```groovy
-#!/usr/bin/env groovy
-
-library("govuk")
-
-node {
-  govuk.buildProject(sassLint: false)
-}
-```
 
 If you need to run tests using a command other than the default rake task
 you can do this by specifying the `overrideTestTask` option:
@@ -76,5 +64,4 @@ gemName | If publishing a Rubygem, you can specify the Gem name. | Repository na
 overrideTestTask | A closure containing commands to run to test the project. This will run instead of the default `bundle exec rake` |
 postgres96Lint | Whether or not to forbid newer postgres features | `true`
 publishingE2ETests | Whether or not to run the Publishing end-to-end tests. | `false`
-sassLint | Whether or not to run the SASS linter | `true`
 skipDeployToIntegration | Whether or not to skip the "Deploy to integration" stage | `false`

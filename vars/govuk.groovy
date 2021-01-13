@@ -166,14 +166,6 @@ def nonDockerBuildTasks(options, jobName, repoName) {
     }
   }
 
-  if (hasAssets() && hasSCSSLint() && options.sassLint != false) {
-    stage("Lint SCSS") {
-      lintSCSS()
-    }
-  } else {
-    echo "WARNING: You do not have scss-lint installed."
-  }
-
   if (options.postgres96Lint != false) {
     stage("Check for Postgres 9.6 features") {
       postgres96Linter()
@@ -551,22 +543,6 @@ def setEnvGitCommit() {
 }
 
 /**
- * Runs govuk-lint-sass (deprecated)
- */
-def sassLinter(String dirs = 'app/assets/stylesheets') {
-  echo 'Running SASS linter'
-  sh("bundle exec govuk-lint-sass ${dirs}")
-}
-
-/**
- * Runs scss-lint
- */
-def lintSCSS(String dirs = 'app/assets/stylesheets') {
-  echo 'Running scss-lint'
-  sh("bundle exec scss-lint ${dirs}")
-}
-
-/**
  * Check for postgres 9.6 features: jsonb and brin
  */
 def postgres96Linter(String base = 'master', String file = 'db/schema.rb') {
@@ -788,13 +764,6 @@ def hasAssets() {
  */
 def hasRubocop() {
   sh(script: "grep 'rubocop' Gemfile.lock", returnStatus: true) == 0
-}
-
-/**
- * Does this project use scss-lint?
- */
-def hasSCSSLint() {
-  sh(script: "grep 'scss_lint' Gemfile.lock", returnStatus: true) == 0
 }
 
 /**
