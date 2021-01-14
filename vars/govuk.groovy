@@ -166,12 +166,6 @@ def nonDockerBuildTasks(options, jobName, repoName) {
     }
   }
 
-  if (options.postgres96Lint != false) {
-    stage("Check for Postgres 9.6 features") {
-      postgres96Linter()
-    }
-  }
-
   if (options.beforeTest) {
     echo "Running pre-test tasks"
     options.beforeTest.call()
@@ -542,14 +536,6 @@ def setEnvGitCommit() {
   env.GIT_COMMIT = getGitCommit()
 }
 
-/**
- * Check for postgres 9.6 features: jsonb and brin
- */
-def postgres96Linter(String base = 'master', String file = 'db/schema.rb') {
-  echo 'Running Postgres 9.6 linter'
-  sh("! git diff master ${base} -- ${file} | grep -i brin")
-  sh("! git diff master ${base} -- ${file} | grep -i jsonb")
-}
 
 /**
  * Precompiles assets
