@@ -166,6 +166,12 @@ def nonDockerBuildTasks(options, jobName, repoName) {
     }
   }
 
+  if (options.yarnInstall != false && fileExists(file: "yarn.lock")) {
+    stage("yarn install") {
+      sh("yarn install --frozen-lockfile")
+    }
+  }
+
   if (options.beforeTest) {
     echo "Running pre-test tasks"
     options.beforeTest.call()
